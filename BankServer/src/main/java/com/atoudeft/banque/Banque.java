@@ -137,29 +137,6 @@ public class Banque implements Serializable {
             }
 
         }
-
-        CompteBancaire tempCompteCheque= new CompteBancaire(tempNumBancaire,TypeCompte.CHEQUE) {
-            @Override
-            public boolean crediter(double montant) {
-                return false;
-            }
-
-            @Override
-            public boolean debiter(double montant) {
-                return false;
-            }
-
-            @Override
-            public boolean payerFacture(String numeroFacture, double montant, String description) {
-                return false;
-            }
-
-            @Override
-            public boolean transferer(double montant, String numeroCompteDestinataire) {
-                return false;
-            }
-        };
-        newCompteClient.ajouter(tempCompteCheque);
         return this.comptes.add(new CompteClient(numCompteClient,nip)); //À modifier
     }
 
@@ -171,6 +148,7 @@ public class Banque implements Serializable {
      */
     public String getNumeroCompteParDefaut(String numCompteClient) {
         //À compléter : retourner le numéro du compte-chèque du compte-client.
+
         return null; //À modifier
     }
 }
