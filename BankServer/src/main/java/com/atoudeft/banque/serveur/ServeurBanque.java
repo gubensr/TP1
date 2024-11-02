@@ -87,17 +87,18 @@ public class ServeurBanque extends Serveur {
      */
     public void supprimeInactifs() {
         //À définir :
-       List<String> list= new ArrayList<>(Arrays.asList(list().split(":")));
-        Iterator<Connexion> iterator=connectes.iterator();
+        List<String> list = new ArrayList<>(Arrays.asList(list().split(":")));
+        Iterator<Connexion> iterator = connectes.iterator();
         while (iterator.hasNext()) {
             Connexion c = iterator.next();
-            if (((ConnexionBanque)c).estInactifDepuis(DELAI_INACTIVITE)) {
+            if (((ConnexionBanque) c).estInactifDepuis(DELAI_INACTIVITE)) {
                 // Supprimer le numéro de compte client de la liste
-                list.remove(((ConnexionBanque)c).getNumeroCompteClient());
+                list.remove(((ConnexionBanque) c).getNumeroCompteClient());
                 // Envoyer le message "END" à la connexion inactive
                 c.envoyer("END");
                 // Supprimer la connexion du vecteur
                 iterator.remove();
-
             }
-}}}
+        }
+    }
+}
