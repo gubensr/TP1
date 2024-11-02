@@ -110,11 +110,11 @@ public class Banque implements Serializable {
          */
         //Vérifier le numCompteClient:
         //Explication: https://regex101.com/r/1lWksn/1
-        if (numCompteClient.matches("[A-Z0-9]{6,8}")){
+        if (!numCompteClient.matches("[A-Z0-9]{6,8}")){
             return false;
         }
         //vérifier le nip:
-        if (nip.matches("[0-9]{4,5}")){
+        if (!nip.matches("[0-9]{4,5}")){
             return false;
         }
         //
@@ -135,6 +135,7 @@ public class Banque implements Serializable {
                     break;
                 }
             }
+
         }
         return this.comptes.add(new CompteClient(numCompteClient,nip)); //À modifier
     }

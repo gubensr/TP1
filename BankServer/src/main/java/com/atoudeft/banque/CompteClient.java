@@ -33,6 +33,6 @@ public class CompteClient implements Serializable {
 
     //test Gubens
     public List<CompteBancaire> getComptes() {
-        return comptes;
+        return this.comptes;
     }
 }
