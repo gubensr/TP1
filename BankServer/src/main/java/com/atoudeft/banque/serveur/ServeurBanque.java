@@ -1,12 +1,9 @@
 package com.atoudeft.banque.serveur;
 
 import com.atoudeft.banque.Banque;
-import com.atoudeft.banque.CompteClient;
 import com.atoudeft.banque.io.EntreesSorties;
 import com.atoudeft.commun.net.Connexion;
 import com.atoudeft.serveur.Serveur;
-
-import java.util.*;
 
 /**
  * Cette classe étend (hérite) la classe Serveur et y ajoute le nécessaire pour que le
@@ -17,7 +14,7 @@ import java.util.*;
  * @since 2024-08-20
  */
 public class ServeurBanque extends Serveur {
-    public static final int DELAI_INACTIVITE = 30000;
+    public static final int DELAI_INACTIVITE = 3000;
     //Référence vers la banque gérée par ce serveur :
     private Banque banque;
     //Thread qui supprime les connexions inactives :
@@ -87,17 +84,9 @@ public class ServeurBanque extends Serveur {
      */
     public void supprimeInactifs() {
         //À définir :
-        List<String> list = new ArrayList<>(Arrays.asList(list().split(":")));
-        Iterator<Connexion> iterator = connectes.iterator();
-        while (iterator.hasNext()) {
-            Connexion c = iterator.next();
+        for (Connexion c : connectes) {
             if (((ConnexionBanque) c).estInactifDepuis(DELAI_INACTIVITE)) {
-                // Supprimer le numéro de compte client de la liste
-                list.remove(((ConnexionBanque) c).getNumeroCompteClient());
-                // Envoyer le message "END" à la connexion inactive
                 c.envoyer("END");
-                // Supprimer la connexion du vecteur
-                iterator.remove();
             }
         }
     }
