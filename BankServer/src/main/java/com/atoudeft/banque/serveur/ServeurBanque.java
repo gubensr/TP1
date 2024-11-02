@@ -14,7 +14,7 @@ import com.atoudeft.serveur.Serveur;
  * @since 2024-08-20
  */
 public class ServeurBanque extends Serveur {
-    public static final int DELAI_INACTIVITE = 3000;
+    public static final int DELAI_INACTIVITE = 30000;
     //Référence vers la banque gérée par ce serveur :
     private Banque banque;
     //Thread qui supprime les connexions inactives :
