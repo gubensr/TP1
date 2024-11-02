@@ -5,6 +5,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Banque implements Serializable {
     private String nom;
@@ -119,6 +120,21 @@ public class Banque implements Serializable {
         //
         if (getCompteClient(numCompteClient)==null){
         return false;
+        }
+        CompteClient newCompteClient= new CompteClient(numCompteClient,nip);
+
+        String tempNumBancaire="";
+
+        boolean estUtilise=true;
+        while (estUtilise) {
+            tempNumBancaire=CompteBancaire.genereNouveauNumero();
+            estUtilise=false;
+            for (CompteBancaire c : newCompteClient.getComptes()) {
+                if (Objects.equals(c.getNumero(), tempNumBancaire)) {
+                    estUtilise=true;
+                    break;
+                }
+            }
         }
         return this.comptes.add(new CompteClient(numCompteClient,nip)); //À modifier
     }
