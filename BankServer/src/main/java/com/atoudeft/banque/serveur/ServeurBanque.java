@@ -87,6 +87,7 @@ public class ServeurBanque extends Serveur {
         for (Connexion c : connectes) {
             if (((ConnexionBanque) c).estInactifDepuis(DELAI_INACTIVITE)) {
                 c.envoyer("END");
+                enlever(c);
             }
         }
     }
