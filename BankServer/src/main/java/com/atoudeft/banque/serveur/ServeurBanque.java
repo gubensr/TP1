@@ -89,7 +89,6 @@ public class ServeurBanque extends Serveur {
     public void supprimeInactifs() {
         //À définir :
         List<Connexion> aEnlever = new ArrayList<>();
-
         for (Connexion c : connectes) {
             if (((ConnexionBanque) c).estInactifDepuis(DELAI_INACTIVITE)) {
                 c.envoyer("END");
@@ -97,10 +96,8 @@ public class ServeurBanque extends Serveur {
                 aEnlever.add(c);
             }
         }
-        if (!aEnlever.isEmpty()){
             for (Connexion c : aEnlever) {
                 enlever(c);
             }
         }
     }
-}
