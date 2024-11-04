@@ -108,23 +108,20 @@ public class Banque implements Serializable {
                 . Créer un compte-chèque avec ce numéro et l'ajouter au compte-client;
                 . Ajouter le compte-client à la liste des comptes et retourner true.
          */
-        //Vérifier le numCompteClient:
         //Explication: https://regex101.com/r/1lWksn/1
         if (!numCompteClient.matches("[A-Z0-9]{6,8}")){
             return false;
         }
-        //vérifier le nip:
         if (!nip.matches("[0-9]{4,5}")){
             return false;
         }
-        //
-        if (getCompteClient(numCompteClient)==null){
+        if ((getCompteClient(numCompteClient)!=null)){
         return false;
         }
+
         CompteClient newCompteClient= new CompteClient(numCompteClient,nip);
 
         String tempNumBancaire="";
-
         boolean estUtilise=true;
         while (estUtilise) {
             tempNumBancaire=CompteBancaire.genereNouveauNumero();
@@ -135,9 +132,11 @@ public class Banque implements Serializable {
                     break;
                 }
             }
-
         }
-        return this.comptes.add(new CompteClient(numCompteClient,nip)); //À modifier
+
+        newCompteClient.ajouter(new CompteCheque(numCompteClient,TypeCompte.CHEQUE));
+
+        return this.comptes.add(newCompteClient);
     }
 
     /**
