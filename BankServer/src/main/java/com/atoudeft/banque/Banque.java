@@ -121,18 +121,18 @@ public class Banque implements Serializable {
 
         CompteClient newCompteClient= new CompteClient(numCompteClient,nip);
 
-        String tempNumBancaire="";
-        boolean estUtilise=true;
-        while (estUtilise) {
-            tempNumBancaire=CompteBancaire.genereNouveauNumero();
-            estUtilise=false;
+        String tempNumBancaire;
+        boolean estUtilise;
+        do {
+            tempNumBancaire = CompteBancaire.genereNouveauNumero();
+            estUtilise = false;
             for (CompteBancaire c : newCompteClient.getComptes()) {
                 if (Objects.equals(c.getNumero(), tempNumBancaire)) {
-                    estUtilise=true;
+                    estUtilise = true;
                     break;
                 }
             }
-        }
+        } while (estUtilise);
 
         newCompteClient.ajouter(new CompteCheque(numCompteClient,TypeCompte.CHEQUE));
 

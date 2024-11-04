@@ -35,4 +35,8 @@ public class CompteClient implements Serializable {
     public List<CompteBancaire> getComptes() {
         return this.comptes;
     }
+    public boolean verifierNIP(String nipEntree){
+        return nipEntree.equals(this.nip);
+    }
+
 }

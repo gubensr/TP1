@@ -1,6 +1,7 @@
 package com.atoudeft.serveur;
 
 import com.atoudeft.banque.Banque;
+import com.atoudeft.banque.CompteClient;
 import com.atoudeft.banque.serveur.ConnexionBanque;
 import com.atoudeft.banque.serveur.ServeurBanque;
 import com.atoudeft.commun.evenement.Evenement;
@@ -52,6 +53,28 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                     cnx.envoyer("END");
                     serveurBanque.enlever(cnx);
                     cnx.close();
+                    break;
+                case "CONNECT": //Connecte à un compte
+                    argument = evenement.getArgument();
+                    t = argument.split(":");
+                    numCompteClient = t[0];
+                    nip = t[1];
+                    //verifier qu'il n'ya pas un des connectés qui utilise deja ce compte
+                    if (serveurBanque.list().contains(numCompteClient)){
+                        cnx.envoyer("CONNECT NO");
+                        break;
+                    }
+                    banque=((ServeurBanque) serveur).getBanque();
+                    CompteClient compteClient= banque.getCompteClient(numCompteClient);
+                    if (!compteClient.verifierNIP(nip)){
+                        cnx.envoyer("CONNECT NO");
+                        break;
+                    }
+                    //inscrit le numéro du compte-client et le numéro de son compte
+                    //chèque dans l’objet ConnexionBanque du client
+                    cnx.setNumeroCompteClient(numCompteClient);
+                    cnx.setNumeroCompteActuel(banque.getNumeroCompteParDefaut(numCompteClient));
+                    cnx.envoyer("CONNECT OK");
                     break;
                 case "LIST": //Envoie la liste des numéros de comptes-clients connectés :
                     cnx.envoyer("LIST " + serveurBanque.list());
