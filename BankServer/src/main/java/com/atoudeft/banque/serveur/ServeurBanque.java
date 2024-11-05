@@ -6,7 +6,6 @@ import com.atoudeft.commun.net.Connexion;
 import com.atoudeft.serveur.Serveur;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -18,7 +17,7 @@ import java.util.List;
  * @since 2024-08-20
  */
 public class ServeurBanque extends Serveur {
-    public static final int DELAI_INACTIVITE = 3000;
+    public static final int DELAI_INACTIVITE = 30000;
     //Référence vers la banque gérée par ce serveur :
     private Banque banque;
     //Thread qui supprime les connexions inactives :
@@ -91,13 +90,13 @@ public class ServeurBanque extends Serveur {
         List<Connexion> aEnlever = new ArrayList<>();
         for (Connexion c : connectes) {
             if (((ConnexionBanque) c).estInactifDepuis(DELAI_INACTIVITE)) {
-                c.envoyer("END");
-                c.close();
                 aEnlever.add(c);
             }
         }
             for (Connexion c : aEnlever) {
+                c.envoyer("END");
                 enlever(c);
+                c.close();
             }
         }
     }
