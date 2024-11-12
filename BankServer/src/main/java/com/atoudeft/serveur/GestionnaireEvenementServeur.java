@@ -7,6 +7,12 @@ import com.atoudeft.banque.serveur.ServeurBanque;
 import com.atoudeft.commun.evenement.Evenement;
 import com.atoudeft.commun.evenement.GestionnaireEvenement;
 import com.atoudeft.commun.net.Connexion;
+import com.atoudeft.banque.CompteBancaire;
+import com.atoudeft.banque.CompteEpargne;
+import com.atoudeft.banque.TypeCompte;
+
+import java.util.Arrays;
+
 
 /**
  * Cette classe représente un gestionnaire d'événement d'un serveur. Lorsqu'un serveur reçoit un texte d'un client,
@@ -105,13 +111,28 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                     break;
 
                 case "EPARGNE":
-                    if (cnx.getNumeroCompteClient()==null) {
-                        cnx.envoyer("EPARGNE NO");
-                        break;
-                    } else{
+                    if (cnx.getNumeroCompteClient() == null) {
+                        cnx.envoyer("EPARGNE NO pas connecte");
+                    } else if (serveurBanque.getBanque().possedeCompteEpargne(cnx.getNumeroCompteClient())) {
+                        cnx.envoyer("EPARGNE NO deja possede");
+                    } else {
+                        String numeroCompteEpargne = null;
+                        boolean estUtilise;
+                        do {
+                            numeroCompteEpargne = CompteBancaire.genereNouveauNumero();
+                            final String finalNumeroCompteEpargne = numeroCompteEpargne;
+                            estUtilise = serveurBanque.getBanque().getComptes()
+                                    .stream()
+                                    .anyMatch(c -> c.getNumero().equals(finalNumeroCompteEpargne));
+                        } while (estUtilise);
 
-                }
+                        CompteEpargne compteEpargne = new CompteEpargne(numeroCompteEpargne, TypeCompte.EPARGNE, 5.0);
+                        serveurBanque.getBanque().getCompteClient(cnx.getNumeroCompteClient()).ajouter((CompteBancaire) compteEpargne);
+                        cnx.envoyer("EPARGNE OK " + numeroCompteEpargne);
+                    }
                     break;
+
+
                 /******************* TRAITEMENT PAR DÉFAUT *******************/
                 default: //Renvoyer le texte recu convertit en majuscules :
                     msg = (evenement.getType() + " " + evenement.getArgument()).toUpperCase();
