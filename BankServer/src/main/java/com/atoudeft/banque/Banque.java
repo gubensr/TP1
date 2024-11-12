@@ -154,4 +154,28 @@ public class Banque implements Serializable {
         }
         return null; //À modifier
     }
+
+    public boolean possedeCompteEpargne(String numeroCompteClient) {
+        CompteClient compteClient = getCompteClient(numeroCompteClient);
+        if (compteClient == null) return false;
+
+        for (CompteBancaire compte : compteClient.getComptes()) {
+            if (compte instanceof CompteEpargne) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public List<CompteBancaire> getComptes() {
+        List<CompteBancaire> tousLesComptes = new ArrayList<>();
+        for (CompteClient client : comptes) {
+            tousLesComptes.addAll(client.getComptes());
+        }
+        return tousLesComptes;
+    }
+
 }
+
+
+
