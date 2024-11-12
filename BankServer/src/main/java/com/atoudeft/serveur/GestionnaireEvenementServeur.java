@@ -103,6 +103,15 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                             cnx.envoyer("NOUVEAU NO "+t[0]+" existe");
                     }
                     break;
+
+                case "EPARGNE":
+                    if (cnx.getNumeroCompteClient()==null) {
+                        cnx.envoyer("EPARGNE NO");
+                        break;
+                    } else{
+
+                }
+                    break;
                 /******************* TRAITEMENT PAR DÉFAUT *******************/
                 default: //Renvoyer le texte recu convertit en majuscules :
                     msg = (evenement.getType() + " " + evenement.getArgument()).toUpperCase();
