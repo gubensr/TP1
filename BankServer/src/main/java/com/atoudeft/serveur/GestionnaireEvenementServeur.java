@@ -12,6 +12,7 @@ import com.atoudeft.banque.CompteEpargne;
 import com.atoudeft.banque.TypeCompte;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 
 /**
@@ -72,10 +73,17 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                     }
                     banque=((ServeurBanque) serveur).getBanque();
                     CompteClient compteClient= banque.getCompteClient(numCompteClient);
+                    if (compteClient == null){
+                    cnx.envoyer("CONNECT NO");
+
+                    break;
+                    }
                     if (!compteClient.verifierNIP(nip)){
                         cnx.envoyer("CONNECT NO");
                         break;
                     }
+
+
                     //inscrit le numéro du compte-client et le numéro de son compte
                     //chèque dans l’objet ConnexionBanque du client
                     cnx.setNumeroCompteClient(numCompteClient);
@@ -116,18 +124,22 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                     } else if (serveurBanque.getBanque().possedeCompteEpargne(cnx.getNumeroCompteClient())) {
                         cnx.envoyer("EPARGNE NO deja possede");
                     } else {
-                        String numeroCompteEpargne = null;
+                        String numeroCompteEpargne;
                         boolean estUtilise;
+                        banque = serveurBanque.getBanque();
                         do {
                             numeroCompteEpargne = CompteBancaire.genereNouveauNumero();
-                            final String finalNumeroCompteEpargne = numeroCompteEpargne;
-                            estUtilise = serveurBanque.getBanque().getComptes()
-                                    .stream()
-                                    .anyMatch(c -> c.getNumero().equals(finalNumeroCompteEpargne));
+                            estUtilise = false;
+                            for (CompteBancaire c : banque.getComptes()) {
+                                if (Objects.equals(c.getNumero(), numeroCompteEpargne)) {
+                                    estUtilise = true;
+                                    break;
+                                }
+                            }
                         } while (estUtilise);
 
                         CompteEpargne compteEpargne = new CompteEpargne(numeroCompteEpargne, TypeCompte.EPARGNE, 5.0);
-                        serveurBanque.getBanque().getCompteClient(cnx.getNumeroCompteClient()).ajouter((CompteBancaire) compteEpargne);
+                        serveurBanque.getBanque().getCompteClient(cnx.getNumeroCompteClient()).ajouter( compteEpargne);
                         cnx.envoyer("EPARGNE OK " + numeroCompteEpargne);
                     }
                     break;
