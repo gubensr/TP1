@@ -24,7 +24,12 @@ public class OperationFacture extends Operation {
         return description;
     }
 
+    @Override
     public void execute() {
+    }
 
+    @Override
+    public String toString() {
+        return getDate() + " " + getType() + " " + montant + " " + numeroFacture + " " + description;
     }
 }

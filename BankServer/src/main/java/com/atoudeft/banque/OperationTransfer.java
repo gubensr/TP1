@@ -18,7 +18,12 @@ public class OperationTransfer extends Operation {
         return numeroCompteDestinataire;
     }
 
+    @Override
     public void execute() {
+    }
 
+    @Override
+    public String toString() {
+        return getDate() + " " + getType() + " " + montant + " " + numeroCompteDestinataire;
     }
 }

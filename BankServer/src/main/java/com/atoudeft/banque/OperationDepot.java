@@ -14,6 +14,10 @@ public class OperationDepot extends Operation {
 
     @Override
     public void execute() {
+    }
 
+    @Override
+    public String toString() {
+        return getDate() + " " + getType() + " " + montant;
     }
 }

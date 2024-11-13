@@ -12,7 +12,12 @@ public class OperationRetrait extends Operation {
         return montant;
     }
 
+    @Override
     public void execute() {
+    }
 
+    @Override
+    public String toString() {
+        return getDate() + " " + getType() + " " + montant;
     }
 }
