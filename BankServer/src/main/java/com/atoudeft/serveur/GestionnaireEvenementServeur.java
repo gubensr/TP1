@@ -7,6 +7,13 @@ import com.atoudeft.banque.serveur.ServeurBanque;
 import com.atoudeft.commun.evenement.Evenement;
 import com.atoudeft.commun.evenement.GestionnaireEvenement;
 import com.atoudeft.commun.net.Connexion;
+import com.atoudeft.banque.CompteBancaire;
+import com.atoudeft.banque.CompteEpargne;
+import com.atoudeft.banque.TypeCompte;
+
+import java.util.Arrays;
+import java.util.Objects;
+
 
 /**
  * Cette classe représente un gestionnaire d'événement d'un serveur. Lorsqu'un serveur reçoit un texte d'un client,
@@ -66,10 +73,17 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                     }
                     banque=((ServeurBanque) serveur).getBanque();
                     CompteClient compteClient= banque.getCompteClient(numCompteClient);
+                    if (compteClient == null){
+                    cnx.envoyer("CONNECT NO");
+
+                    break;
+                    }
                     if (!compteClient.verifierNIP(nip)){
                         cnx.envoyer("CONNECT NO");
                         break;
                     }
+
+
                     //inscrit le numéro du compte-client et le numéro de son compte
                     //chèque dans l’objet ConnexionBanque du client
                     cnx.setNumeroCompteClient(numCompteClient);
@@ -103,6 +117,34 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                             cnx.envoyer("NOUVEAU NO "+t[0]+" existe");
                     }
                     break;
+
+                case "EPARGNE":
+                    if (cnx.getNumeroCompteClient() == null) {
+                        cnx.envoyer("EPARGNE NO pas connecte");
+                    } else if (serveurBanque.getBanque().possedeCompteEpargne(cnx.getNumeroCompteClient())) {
+                        cnx.envoyer("EPARGNE NO deja possede");
+                    } else {
+                        String numeroCompteEpargne;
+                        boolean estUtilise;
+                        banque = serveurBanque.getBanque();
+                        do {
+                            numeroCompteEpargne = CompteBancaire.genereNouveauNumero();
+                            estUtilise = false;
+                            for (CompteBancaire c : banque.getComptes()) {
+                                if (Objects.equals(c.getNumero(), numeroCompteEpargne)) {
+                                    estUtilise = true;
+                                    break;
+                                }
+                            }
+                        } while (estUtilise);
+
+                        CompteEpargne compteEpargne = new CompteEpargne(numeroCompteEpargne, TypeCompte.EPARGNE, 5.0);
+                        serveurBanque.getBanque().getCompteClient(cnx.getNumeroCompteClient()).ajouter( compteEpargne);
+                        cnx.envoyer("EPARGNE OK " + numeroCompteEpargne);
+                    }
+                    break;
+
+
                 /******************* TRAITEMENT PAR DÉFAUT *******************/
                 default: //Renvoyer le texte recu convertit en majuscules :
                     msg = (evenement.getType() + " " + evenement.getArgument()).toUpperCase();
