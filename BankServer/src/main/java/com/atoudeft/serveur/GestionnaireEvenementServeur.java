@@ -144,6 +144,29 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                     }
                     break;
 
+                case "SELECT":
+                    banque = serveurBanque.getBanque();
+                    if (cnx.getNumeroCompteClient() != null) {
+                        argument = evenement.getArgument();
+                        if (argument.equalsIgnoreCase("EPARGNE")){
+                            cnx = (ConnexionBanque) source;
+                            cnx.setNumeroCompteActuel(banque.getCompteClient(cnx.getNumeroCompteClient()).getComptes().get(1).getNumero());
+                            System.out.println(cnx.getNumeroCompteActuel());
+                            break;
+                        } else if (argument.equalsIgnoreCase("CHEQUE")){
+                            cnx = (ConnexionBanque) source;
+                            cnx.setNumeroCompteActuel(banque.getNumeroCompteParDefaut(cnx.getNumeroCompteClient()));
+                            System.out.println(cnx.getNumeroCompteActuel());
+                            break;
+                        } else {
+                            cnx.envoyer("ERREUR ");
+                        }
+                    } else {
+                        cnx.envoyer("SELECT pas connecte");
+                        break;
+                    }
+
+                    break;
 
                 /******************* TRAITEMENT PAR DÉFAUT *******************/
                 default: //Renvoyer le texte recu convertit en majuscules :
