@@ -168,43 +168,22 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
 
                     break;
 
-
-
                 case "DEPOT":
                     if (cnx.getNumeroCompteClient() == null) {
                         cnx.envoyer("DEPOT NO pas connecte");
                     } else {
-                        String commande = evenement.getArgument();
-                        System.out.println("Commande reçue : " + commande);
-                        String[] arguments = commande.split(" ");
-                        System.out.println("Nombre d'arguments : " + arguments.length);
-                        for (String arg : arguments) {
-                            System.out.println("Argument : " + arg);
-                        }
-                        // Vérification de la longueur des arguments
-                        if (arguments.length != 2) {
-                            cnx.envoyer("DEPOT NO format incorrect");
-                        } else {
-                            double montant = Double.parseDouble(arguments[1]);
-                            System.out.println("Montant : " + montant);
-                            compteClient = serveurBanque.getBanque().getCompteClient(cnx.getNumeroCompteClient());
+                        banque = serveurBanque.getBanque();
+                        compteClient = banque.getCompteClient(cnx.getNumeroCompteClient());
+                        String montantStr = evenement.getArgument();
+                            double montant = Double.parseDouble(montantStr);
                             CompteBancaire compte = compteClient.getCompteParType(TypeCompte.CHEQUE);
                             if (compte != null && compte.crediter(montant)) {
                                 cnx.envoyer("DEPOT OK " + montant);
                             } else {
                                 cnx.envoyer("DEPOT NO erreur");
                             }
-                        }
                     }
                     break;
-
-
-
-
-
-
-
-
 
                 /******************* TRAITEMENT PAR DÉFAUT *******************/
                 default: //Renvoyer le texte recu convertit en majuscules :
