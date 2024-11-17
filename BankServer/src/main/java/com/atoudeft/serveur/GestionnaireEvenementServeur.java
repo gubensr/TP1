@@ -171,25 +171,23 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                         banque = serveurBanque.getBanque();
                         compteClient = banque.getCompteClient(cnx.getNumeroCompteClient());
                         String montantStr = evenement.getArgument();
-                        double montant = Double.parseDouble(montantStr);
-                        CompteBancaire compte = null;
-                        String numeroCompteActuel = cnx.getNumeroCompteActuel();
-                        if (numeroCompteActuel.equals(compteClient.getCompteParType(TypeCompte.EPARGNE).getNumero())) {
-                            compte = compteClient.getCompteParType(TypeCompte.EPARGNE);
-                        } else if (numeroCompteActuel.equals(compteClient.getCompteParType(TypeCompte.CHEQUE).getNumero())) {
-                            compte = compteClient.getCompteParType(TypeCompte.CHEQUE);
-                        }
-                        if (compte == null) {
-                            cnx.envoyer("DEPOT NO compte non trouvé");
-                        } else if (compte instanceof CompteCheque && ((CompteCheque) compte).crediter(montant)) {
-                            cnx.envoyer("DEPOT OK " + montant);
-                        } else if (compte instanceof CompteEpargne && ((CompteEpargne) compte).crediter(montant)) {
-                            cnx.envoyer("DEPOT OK " + montant);
-                        } else {
-                            cnx.envoyer("DEPOT NO erreur");
+                        try {
+                            double montant = Double.parseDouble(montantStr);
+                            CompteBancaire compte = compteClient.getCompteParNumero(cnx.getNumeroCompteActuel());
+
+                            if (compte == null) {
+                                cnx.envoyer("DEPOT NO compte non trouvé");
+                            } else if (compte.crediter(montant)) {
+                                cnx.envoyer("DEPOT OK " + montant);
+                            } else {
+                                cnx.envoyer("DEPOT NO erreur");
+                            }
+                        } catch (NumberFormatException e) {
+                            cnx.envoyer("DEPOT NO montant invalide");
                         }
                     }
                     break;
+
 
                 case "RETRAIT":
                     if (cnx.getNumeroCompteClient() == null) {
@@ -209,6 +207,32 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                             cnx.envoyer("RETRAIT OK " + montant);
                         } else {
                             cnx.envoyer("RETRAIT NO erreur");
+                        }
+                    }
+                    break;
+
+                case "FACTURE":
+                    if (cnx.getNumeroCompteClient() == null) {
+                        cnx.envoyer("FACTURE NO pas connecte");
+                    } else {
+                        banque = serveurBanque.getBanque();
+                        compteClient = banque.getCompteClient(cnx.getNumeroCompteClient());
+                        String[] args = evenement.getArgument().split(" ", 4);
+                        if (args.length < 4) {
+                            cnx.envoyer("FACTURE NO erreur format");
+                        } else {
+                            double montant = Double.parseDouble(args[0]);
+                            String numeroFacture = args[1];
+                            String description = args[2] + " " + args[3];
+                            CompteBancaire compte = compteClient.getCompteParNumero(cnx.getNumeroCompteActuel());
+                            if (compte == null) {
+                                cnx.envoyer("FACTURE NO compte non trouvé");
+                            } else if (compte.payerFacture(numeroFacture, montant, description)) {
+                                cnx.envoyer("FACTURE OK " + montant + " " + numeroFacture + " " + description);
+                            } else {
+                                cnx.envoyer("FACTURE NO erreur");
+                            }
+                            cnx.envoyer("FACTURE NO montant invalide");
                         }
                     }
                     break;

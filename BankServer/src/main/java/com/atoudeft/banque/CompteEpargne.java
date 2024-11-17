@@ -22,24 +22,29 @@ public class CompteEpargne extends CompteBancaire{
     this.solde += interets;
     }
 
-    @Override
-    public boolean crediter(double montant) {
-        if (montant > 0) {
-            this.solde += montant;
-            this.setSolde(this.solde);
-            return true;
-        }
-        return false;
+@Override
+public boolean crediter(double montant) {
+    if (montant > 0) {
+        double nouvSolde = this.getSolde();
+        nouvSolde += montant;
+        this.setSolde(nouvSolde);
+        return true;
     }
+    return false;
+}
 
     @Override
     public boolean debiter(double montant) {
-        if (montant > 0 && this.solde >= montant) {
-            this.solde -= montant;
-            if (this.solde < LIMITE) {
-                this.solde -= FRAIS;
+        if (montant > 0 && this.getSolde() >= montant) {
+            double soldeApresRetrait = this.getSolde() - montant;
+            if (soldeApresRetrait < LIMITE) {
+                double soldeApresFrais = soldeApresRetrait - FRAIS;
+                if (soldeApresFrais >= 0) {
+                    soldeApresRetrait = soldeApresFrais;
+                } else {
+                }
             }
-            this.setSolde(this.solde);
+            this.setSolde(soldeApresRetrait);
             return true;
         }
         return false;
@@ -47,6 +52,18 @@ public class CompteEpargne extends CompteBancaire{
 
     @Override
     public boolean payerFacture(String numeroFacture, double montant, String description) {
+        if (montant >= 0 && this.getSolde() >= montant) {
+            double soldeApresPaiement = this.getSolde() - montant;
+            if (soldeApresPaiement < LIMITE) {
+                double soldeApresFrais = soldeApresPaiement - FRAIS;
+                if (soldeApresFrais < 0) {
+                    return false;
+                }
+                soldeApresPaiement = soldeApresFrais;
+            }
+            this.setSolde(soldeApresPaiement);
+            return true;
+        }
         return false;
     }
 

@@ -33,6 +33,10 @@ public class CompteCheque extends CompteBancaire{
 
     @Override
     public boolean payerFacture(String numeroFacture, double montant, String description) {
+        if (montant >= 0 && this.getSolde() >= montant) {
+            this.setSolde(this.getSolde() - montant);
+            return true;
+        }
         return false;
     }
 
