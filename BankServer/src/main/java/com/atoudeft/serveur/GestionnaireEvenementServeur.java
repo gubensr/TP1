@@ -1,15 +1,11 @@
 package com.atoudeft.serveur;
 
-import com.atoudeft.banque.Banque;
-import com.atoudeft.banque.CompteClient;
+import com.atoudeft.banque.*;
 import com.atoudeft.banque.serveur.ConnexionBanque;
 import com.atoudeft.banque.serveur.ServeurBanque;
 import com.atoudeft.commun.evenement.Evenement;
 import com.atoudeft.commun.evenement.GestionnaireEvenement;
 import com.atoudeft.commun.net.Connexion;
-import com.atoudeft.banque.CompteBancaire;
-import com.atoudeft.banque.CompteEpargne;
-import com.atoudeft.banque.TypeCompte;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -175,13 +171,45 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                         banque = serveurBanque.getBanque();
                         compteClient = banque.getCompteClient(cnx.getNumeroCompteClient());
                         String montantStr = evenement.getArgument();
-                            double montant = Double.parseDouble(montantStr);
-                            CompteBancaire compte = compteClient.getCompteParType(TypeCompte.CHEQUE);
-                            if (compte != null && compte.crediter(montant)) {
-                                cnx.envoyer("DEPOT OK " + montant);
-                            } else {
-                                cnx.envoyer("DEPOT NO erreur");
-                            }
+                        double montant = Double.parseDouble(montantStr);
+                        CompteBancaire compte = null;
+                        String numeroCompteActuel = cnx.getNumeroCompteActuel();
+                        if (numeroCompteActuel.equals(compteClient.getCompteParType(TypeCompte.EPARGNE).getNumero())) {
+                            compte = compteClient.getCompteParType(TypeCompte.EPARGNE);
+                        } else if (numeroCompteActuel.equals(compteClient.getCompteParType(TypeCompte.CHEQUE).getNumero())) {
+                            compte = compteClient.getCompteParType(TypeCompte.CHEQUE);
+                        }
+                        if (compte == null) {
+                            cnx.envoyer("DEPOT NO compte non trouvé");
+                        } else if (compte instanceof CompteCheque && ((CompteCheque) compte).crediter(montant)) {
+                            cnx.envoyer("DEPOT OK " + montant);
+                        } else if (compte instanceof CompteEpargne && ((CompteEpargne) compte).crediter(montant)) {
+                            cnx.envoyer("DEPOT OK " + montant);
+                        } else {
+                            cnx.envoyer("DEPOT NO erreur");
+                        }
+                    }
+                    break;
+
+                case "RETRAIT":
+                    if (cnx.getNumeroCompteClient() == null) {
+                        cnx.envoyer("RETRAIT NO pas connecte");
+                    } else {
+                        banque = serveurBanque.getBanque();
+                        compteClient = banque.getCompteClient(cnx.getNumeroCompteClient());
+                        String montantStr = evenement.getArgument();
+                        double montant = Double.parseDouble(montantStr);
+                        String numeroCompteActuel = cnx.getNumeroCompteActuel();
+                        CompteBancaire compte = compteClient.getCompteParNumero(numeroCompteActuel);
+                        if (compte == null) {
+                            cnx.envoyer("RETRAIT NO pas de compte trouvé");
+                        } else if (compte.getSolde() < montant) {
+                            cnx.envoyer("RETRAIT NO solde insuffisant");
+                        } else if (compte.debiter(montant)) {
+                            cnx.envoyer("RETRAIT OK " + montant);
+                        } else {
+                            cnx.envoyer("RETRAIT NO erreur");
+                        }
                     }
                     break;
 

@@ -11,13 +11,12 @@ public class CompteCheque extends CompteBancaire{
 
     public CompteCheque(String numero, TypeCompte type) {
         super(numero, type);
-        this.solde=getSolde();
     }
 
     @Override
     public boolean crediter(double montant) {
-        this.solde += montant;
-        if (this.solde > 0){
+        if (montant > 0) {
+            this.setSolde(this.getSolde() + montant);
             return true;
         }
         return false;
@@ -25,8 +24,8 @@ public class CompteCheque extends CompteBancaire{
 
     @Override
     public boolean debiter(double montant) {
-        this.solde -= montant;
-        if (this.solde > 0){
+        if (montant > 0 && this.getSolde() >= montant) {
+            this.setSolde(this.getSolde() - montant);
             return true;
         }
         return false;

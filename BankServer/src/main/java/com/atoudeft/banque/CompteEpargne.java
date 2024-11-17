@@ -24,8 +24,9 @@ public class CompteEpargne extends CompteBancaire{
 
     @Override
     public boolean crediter(double montant) {
-        this.solde += montant;
-        if (this.solde > 0){
+        if (montant > 0) {
+            this.solde += montant;
+            this.setSolde(this.solde);
             return true;
         }
         return false;
@@ -33,11 +34,12 @@ public class CompteEpargne extends CompteBancaire{
 
     @Override
     public boolean debiter(double montant) {
-        this.solde -= montant;
-        if (this.solde > 0){
-            if (this.solde<CompteEpargne.LIMITE){
-                this.solde-=CompteEpargne.FRAIS;
+        if (montant > 0 && this.solde >= montant) {
+            this.solde -= montant;
+            if (this.solde < LIMITE) {
+                this.solde -= FRAIS;
             }
+            this.setSolde(this.solde);
             return true;
         }
         return false;

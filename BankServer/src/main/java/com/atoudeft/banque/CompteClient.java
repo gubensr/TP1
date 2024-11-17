@@ -22,6 +22,16 @@ public class CompteClient implements Serializable {
         comptes = new ArrayList<>();
     }
 
+    public CompteBancaire getCompteParNumero(String numero) {
+        for (CompteBancaire compte : comptes) {
+            if (compte.getNumero().equals(numero)) {
+                return compte;
+            }
+        }
+        return null;
+    }
+
+
     /**
      * Ajoute un compte bancaire au compte-client.
      *
