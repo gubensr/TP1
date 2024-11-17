@@ -4,35 +4,50 @@ import java.io.Serializable;
 
 public class PileChainee implements Serializable {
     private Noeud sommet;
+    private int taille;
 
     public PileChainee() {
         this.sommet = null;
+        this.taille = 0;
     }
 
-    public boolean estVide() {
-        return sommet == null;
-    }
-
-    public void empiler(Operation operation) {
-        Noeud nouveauNoeud = new Noeud(operation);
-        nouveauNoeud.setNext(sommet);
+    // empile un element dans la pile
+    public void empiler(Object element) {
+        Noeud nouveauNoeud = new Noeud(element);
+        if (sommet != null) {
+            nouveauNoeud.setPrecedent(sommet);
+        }
         sommet = nouveauNoeud;
+        taille++;
     }
 
-    public Operation depiler() {
+    // depile un element de la pile et @return l'element depile
+    public Object depiler() {
+        if (estVide()) {
+            throw new IllegalStateException("La pile est vide");
+        }
+        Object element = sommet.getElement();
+        sommet = sommet.getPrecedent();
+        taille--;
+        return element;
+    }
+
+    // retourne l'element au sommet de la pile SANS le depiler
+    public Object sommet() {
         if (estVide()) {
             throw new IllegalStateException("La pile est vide.");
         }
-        Operation operation = sommet.getData();
-        sommet = sommet.getNext();
-        return operation;
+        return sommet.getElement();
     }
 
-    public Operation sommet() {
-        if (estVide()) {
-            throw new IllegalStateException("La pile est vide.");
-        }
-        return sommet.getData();
+    // verifie si la pile est vide duh
+    public boolean estVide() {
+        return taille == 0;
+    }
+
+    // retourne la taille de la pile duh
+    public int getTaille() {
+        return taille;
     }
 }
 

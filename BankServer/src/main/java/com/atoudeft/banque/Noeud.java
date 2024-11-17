@@ -3,28 +3,37 @@ package com.atoudeft.banque;
 import java.io.Serializable;
 
 public class Noeud implements Serializable {
+    private Object element;
+    private Noeud suivant;
+    private Noeud precedent;
 
-    private Operation data;
-    private Noeud next;
-
-    public Noeud(Operation data) {
-        this.data = data;
-        this.next = null;
+    public Noeud(Object element) {
+        this.element = element;
+        this.suivant = null;
+        this.precedent = null;
     }
 
-    public Operation getData() {
-        return data;
+    public Object getElement() {
+        return element;
     }
 
-    public void setData(Operation data) {
-        this.data = data;
+    public void setElement(Object element) {
+        this.element = element;
     }
 
-    public Noeud getNext() {
-        return next;
+    public Noeud getSuivant() {
+        return suivant;
     }
 
-    public void setNext(Noeud next) {
-        this.next = next;
+    public void setSuivant(Noeud suivant) {
+        this.suivant = suivant;
+    }
+
+    public Noeud getPrecedent() {
+        return precedent;
+    }
+
+    public void setPrecedent(Noeud precedent) {
+        this.precedent = precedent;
     }
 }
