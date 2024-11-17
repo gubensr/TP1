@@ -40,8 +40,12 @@ public class CompteCheque extends CompteBancaire{
         return false;
     }
 
-    @Override
-    public boolean transferer(double montant, String numeroCompteDestinataire) {
-        return false;
-    }
+    public boolean transferer(double montant, CompteBancaire compteDestinataire) {
+            if (montant > 0 && this.getSolde() >= montant) {
+                this.setSolde(this.getSolde() - montant);
+                compteDestinataire.crediter(montant);
+                return true;
+            }
+            return false;
+        }
 }

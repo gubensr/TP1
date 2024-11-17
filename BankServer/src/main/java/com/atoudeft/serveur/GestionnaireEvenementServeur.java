@@ -112,7 +112,7 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                         else
                             cnx.envoyer("NOUVEAU NO "+t[0]+" existe");
                     }
-                    break;
+                break;
 
                 case "EPARGNE":
                     if (cnx.getNumeroCompteClient() == null) {
@@ -138,7 +138,7 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                         serveurBanque.getBanque().getCompteClient(cnx.getNumeroCompteClient()).ajouter( compteEpargne);
                         cnx.envoyer("EPARGNE OK " + numeroCompteEpargne);
                     }
-                    break;
+                break;
 
                 case "SELECT":
                     banque = serveurBanque.getBanque();
@@ -162,7 +162,7 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                         break;
                     }
 
-                    break;
+                break;
 
                 case "DEPOT":
                     if (cnx.getNumeroCompteClient() == null) {
@@ -181,8 +181,7 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                             cnx.envoyer("DEPOT NO erreur");
                         }
                     }
-                    break;
-
+                break;
 
                 case "RETRAIT":
                     if (cnx.getNumeroCompteClient() == null) {
@@ -204,7 +203,7 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                             cnx.envoyer("RETRAIT NO erreur");
                         }
                     }
-                    break;
+                break;
 
                 case "FACTURE":
                     if (cnx.getNumeroCompteClient() == null) {
@@ -227,6 +226,36 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                             } else {
                                 cnx.envoyer("FACTURE NO erreur");
                             }
+                        }
+                    }
+                break;
+
+                case "TRANSFER":
+                    if (cnx.getNumeroCompteClient() == null) {
+                        cnx.envoyer("TRANSFER NO pas connecte");
+                    } else {
+                        banque = serveurBanque.getBanque();
+                        compteClient = banque.getCompteClient(cnx.getNumeroCompteClient());
+                        String[] args = evenement.getArgument().split(" ", 2);
+                        if (args.length < 2) {
+                            cnx.envoyer("TRANSFER NO erreur format");
+                        } else {
+                            double montant = Double.parseDouble(args[0]);
+                            String numeroCompteDestinataire = args[1];
+                            CompteBancaire compteSource = compteClient.getCompteParNumero(cnx.getNumeroCompteActuel());
+                            CompteClient clientDestinataire = banque.getCompteClientParNumero(numeroCompteDestinataire);
+                                if (compteSource == null || clientDestinataire == null) {
+                                    cnx.envoyer("TRANSFER NO compte inexistant");
+                                } else {
+                                    CompteBancaire compteDestinataire = clientDestinataire.getCompteParNumero(numeroCompteDestinataire);
+                                    if (compteDestinataire == null) {
+                                        cnx.envoyer("TRANSFER NO compte inexistant");
+                                    } else if (compteSource.transferer(montant, compteDestinataire)) {
+                                        cnx.envoyer("TRANSFER OK " + montant + " " + numeroCompteDestinataire);
+                                    } else {
+                                        cnx.envoyer("TRANSFER NO erreur");
+                                    }
+                                }
                         }
                     }
                     break;

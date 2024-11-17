@@ -67,8 +67,22 @@ public boolean crediter(double montant) {
         return false;
     }
 
-    @Override
-    public boolean transferer(double montant, String numeroCompteDestinataire) {
-        return false;
-    }
+        public boolean transferer(double montant, CompteBancaire compteDestinataire) {
+            if (montant > 0 && this.getSolde() >= montant) {
+                double nouveauSolde = this.getSolde() - montant;
+                if (nouveauSolde < LIMITE) {
+                    double soldeApresFrais = nouveauSolde - FRAIS;
+                    if (soldeApresFrais < 0) {
+                        return false;
+                    }
+                    nouveauSolde = soldeApresFrais;
+                }
+
+                this.setSolde(nouveauSolde);
+                compteDestinataire.crediter(montant);
+                return true;
+            }
+            return false;
+        }
+
 }
