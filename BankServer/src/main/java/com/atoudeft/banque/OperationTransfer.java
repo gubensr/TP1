@@ -19,11 +19,12 @@ public class OperationTransfer extends Operation {
     }
 
     @Override
-    public void execute() {
+    public String toString() {
+        return getDate() + " " + getType() + " " + montant + " " + numeroCompteDestinataire;
     }
 
     @Override
-    public String toString() {
-        return getDate() + " " + getType() + " " + montant + " " + numeroCompteDestinataire;
+    public void afficherDetails() {
+        System.out.println(toString());
     }
 }

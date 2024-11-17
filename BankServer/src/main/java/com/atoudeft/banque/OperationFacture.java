@@ -25,11 +25,12 @@ public class OperationFacture extends Operation {
     }
 
     @Override
-    public void execute() {
+    public String toString() {
+        return getDate() + " " + getType() + " " + montant + " " + numeroFacture + " " + description;
     }
 
     @Override
-    public String toString() {
-        return getDate() + " " + getType() + " " + montant + " " + numeroFacture + " " + description;
+    public void afficherDetails() {
+        System.out.println(toString());
     }
 }

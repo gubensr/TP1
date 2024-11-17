@@ -13,11 +13,12 @@ public class OperationRetrait extends Operation {
     }
 
     @Override
-    public void execute() {
+    public String toString() {
+        return getDate() + " " + getType() + " " + montant;
     }
 
     @Override
-    public String toString() {
-        return getDate() + " " + getType() + " " + montant;
+    public void afficherDetails() {
+        System.out.println(toString());
     }
 }
