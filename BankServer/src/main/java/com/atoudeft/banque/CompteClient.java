@@ -52,4 +52,12 @@ public class CompteClient implements Serializable {
     public int hashCode() {
         return Objects.hashCode(numero);
     }
+
+    public CompteBancaire getCompteParType(TypeCompte type) {
+        for (CompteBancaire compte : comptes) {
+            if (compte.getType() == type) {
+                return compte; }
+        } return null;
+    }
 }
+
