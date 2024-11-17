@@ -227,7 +227,6 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                             } else {
                                 cnx.envoyer("FACTURE NO erreur");
                             }
-                            cnx.envoyer("FACTURE NO montant invalide");
                         }
                     }
                     break;
