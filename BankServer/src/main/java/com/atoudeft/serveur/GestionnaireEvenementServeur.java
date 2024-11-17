@@ -168,6 +168,8 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
 
                     break;
 
+
+
                 /******************* TRAITEMENT PAR DÉFAUT *******************/
                 default: //Renvoyer le texte recu convertit en majuscules :
                     msg = (evenement.getType() + " " + evenement.getArgument()).toUpperCase();
