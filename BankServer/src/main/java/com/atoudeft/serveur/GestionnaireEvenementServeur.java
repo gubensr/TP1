@@ -171,19 +171,14 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                         banque = serveurBanque.getBanque();
                         compteClient = banque.getCompteClient(cnx.getNumeroCompteClient());
                         String montantStr = evenement.getArgument();
-                        try {
-                            double montant = Double.parseDouble(montantStr);
-                            CompteBancaire compte = compteClient.getCompteParNumero(cnx.getNumeroCompteActuel());
-
-                            if (compte == null) {
-                                cnx.envoyer("DEPOT NO compte non trouvé");
-                            } else if (compte.crediter(montant)) {
-                                cnx.envoyer("DEPOT OK " + montant);
-                            } else {
-                                cnx.envoyer("DEPOT NO erreur");
-                            }
-                        } catch (NumberFormatException e) {
-                            cnx.envoyer("DEPOT NO montant invalide");
+                        double montant = Double.parseDouble(montantStr);
+                        CompteBancaire compte = compteClient.getCompteParNumero(cnx.getNumeroCompteActuel());
+                        if (compte == null) {
+                            cnx.envoyer("DEPOT NO compte non trouvé");
+                        } else if (compte.crediter(montant)) {
+                            cnx.envoyer("DEPOT OK " + montant);
+                        } else {
+                            cnx.envoyer("DEPOT NO erreur");
                         }
                     }
                     break;
