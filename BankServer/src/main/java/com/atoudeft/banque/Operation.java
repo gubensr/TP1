@@ -21,6 +21,6 @@ public abstract class Operation implements Serializable {
     }
 
     // Méthodes abstraites que les sous-classes devront implémenter
-    public abstract void execute();
+    public abstract void afficherDetails();
 }
 
