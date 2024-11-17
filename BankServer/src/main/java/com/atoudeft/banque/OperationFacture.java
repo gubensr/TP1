@@ -24,7 +24,11 @@ public class OperationFacture extends Operation {
         return description;
     }
 
-    public void execute() {
-
+    @Override
+    public void afficherDetails() {
+        System.out.println("Opération de Facture : Montant = " + montant +
+                ", Numéro de Facture = " + numeroFacture +
+                ", Description = " + description +
+                ", Date = " + getDate());
     }
 }

@@ -13,7 +13,7 @@ public class OperationDepot extends Operation {
     }
 
     @Override
-    public void execute() {
-
+    public void afficherDetails() {
+        System.out.println("Operation de Depot : Montant = " + montant + ", Date = " + getDate());
     }
 }

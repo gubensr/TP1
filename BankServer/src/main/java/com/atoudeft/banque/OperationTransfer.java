@@ -2,23 +2,26 @@ package com.atoudeft.banque;
 
 public class OperationTransfer extends Operation {
     private double montant;
-    private String numeroCompteDestinataire;
+    private String compteDestinataire;
 
-    public OperationTransfer(double montant, String numeroCompteDestinataire) {
+    public OperationTransfer(double montant, String compteDestinataire) {
         super(TypeOperation.TRANSFER);
         this.montant = montant;
-        this.numeroCompteDestinataire = numeroCompteDestinataire;
+        this.compteDestinataire = compteDestinataire;
     }
 
     public double getMontant() {
         return montant;
     }
 
-    public String getNumeroCompteDestinataire() {
-        return numeroCompteDestinataire;
+    public String getCompteDestinataire() {
+        return compteDestinataire;
     }
 
-    public void execute() {
-
+    @Override
+    public void afficherDetails() {
+        System.out.println("Opération de Transfert : Montant = " + montant +
+                ", Compte destinataire = " + compteDestinataire +
+                ", Date = " + getDate());
     }
 }

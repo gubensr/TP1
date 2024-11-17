@@ -12,7 +12,8 @@ public class OperationRetrait extends Operation {
         return montant;
     }
 
-    public void execute() {
-
+    @Override
+    public void afficherDetails() {
+        System.out.println("Opération de Retrait : Montant = " + montant + ", Date = " + getDate());
     }
 }
