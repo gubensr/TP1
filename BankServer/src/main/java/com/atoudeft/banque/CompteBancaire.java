@@ -54,6 +54,7 @@ public abstract class CompteBancaire implements Serializable {
         return solde;
     }
     public void setSolde(double solde) { this.solde = solde;}
+
     public PileChainee<Operation> getHistorique() {
         return historique;
     }

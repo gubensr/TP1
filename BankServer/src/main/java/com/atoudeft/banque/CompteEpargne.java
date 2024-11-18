@@ -1,7 +1,6 @@
 package com.atoudeft.banque;
 
 public class CompteEpargne extends CompteBancaire{
-    private double solde;
     private static final double LIMITE=1000.0;
     private static final double FRAIS=2.0;
     private double tauxInteret;
@@ -13,13 +12,12 @@ public class CompteEpargne extends CompteBancaire{
      */
     public CompteEpargne(String numero, TypeCompte type,double tauxInteret) {
         super(numero, type);
-        this.solde=getSolde();
         this.tauxInteret =tauxInteret;
     }
 
     public void ajouterInterets(){
-    double interets = this.solde * (tauxInteret / 100);
-    this.solde += interets;
+    double interets = this.getSolde() * (tauxInteret / 100);
+    this.setSolde(getSolde()+interets);
     }
 
 @Override
@@ -43,7 +41,6 @@ public boolean crediter(double montant) {
                 double soldeApresFrais = soldeApresRetrait - FRAIS;
                 if (soldeApresFrais >= 0) {
                     soldeApresRetrait = soldeApresFrais;
-                } else {
                 }
             }
             this.setSolde(soldeApresRetrait);

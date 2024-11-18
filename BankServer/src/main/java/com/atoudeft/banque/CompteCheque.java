@@ -1,7 +1,6 @@
 package com.atoudeft.banque;
 
 public class CompteCheque extends CompteBancaire{
-    private double solde;
     /**
      * Crée un compte bancaire.
      *
