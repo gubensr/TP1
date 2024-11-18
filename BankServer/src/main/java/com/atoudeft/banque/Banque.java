@@ -1,6 +1,5 @@
 package com.atoudeft.banque;
 
-import org.jetbrains.annotations.NotNull;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.Serializable;
@@ -129,7 +128,7 @@ public class Banque implements Serializable {
         return this.comptes.add(newCompteClient);
     }
 
-    public @NotNull String genererNumeroCompteUnique() {
+    public String genererNumeroCompteUnique() {
         String numCompte;
         boolean estUtilise;
         do {
