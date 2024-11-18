@@ -3,9 +3,11 @@ package com.atoudeft.banque;
 import java.io.Serializable;
 
 public abstract class CompteBancaire implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String numero;
     private TypeCompte type;
     private double solde;
+    private PileChainee<Operation> historique;
 
     /**
      * Génère un numéro de compte bancaire aléatoirement avec le format CCC00C, où C est un caractère alphabétique
@@ -33,7 +35,15 @@ public abstract class CompteBancaire implements Serializable {
         this.numero = numero;
         this.type = type;
         this.solde = 0;
+        this.historique = new PileChainee<>();
     }
+
+    public void enregistrerOperation(Operation operation) {
+        if (operation != null) {
+            historique.empiler(operation);
+        }
+    }
+
     public String getNumero() {
         return numero;
     }
@@ -44,6 +54,9 @@ public abstract class CompteBancaire implements Serializable {
         return solde;
     }
     public void setSolde(double solde) { this.solde = solde;}
+    public PileChainee<Operation> getHistorique() {
+        return historique;
+    }
     public abstract boolean crediter(double montant);
     public abstract boolean debiter(double montant);
     public abstract boolean payerFacture(String numeroFacture, double montant, String description);

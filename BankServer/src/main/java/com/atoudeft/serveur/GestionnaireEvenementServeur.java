@@ -249,6 +249,23 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                     }
                     break;
 
+
+                case "HIST":
+                    if (cnx.getNumeroCompteClient() == null) {
+                        cnx.envoyer("HIST NO pas connecte");
+                    } else {
+                        banque = serveurBanque.getBanque();
+                        compteClient = banque.getCompteClient(cnx.getNumeroCompteClient());
+                        CompteBancaire compte = compteClient.getCompteParNumero(cnx.getNumeroCompteActuel());
+                        if (compte == null) {
+                            cnx.envoyer("HIST NO compte non trouvé");
+                        } else {
+                            PileChainee<Operation> historique = compte.getHistorique();
+                            cnx.envoyer(String.valueOf(historique.depiler()));
+                        }
+                    }
+                    break;
+
                 /******************* TRAITEMENT PAR DÉFAUT *******************/
                 default: //Renvoyer le texte recu convertit en majuscules :
                     msg = (evenement.getType() + " " + evenement.getArgument()).toUpperCase();

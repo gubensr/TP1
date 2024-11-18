@@ -1,4 +1,11 @@
 package com.atoudeft.banque;
+import com.atoudeft.banque.*;
+import com.atoudeft.banque.serveur.ConnexionBanque;
+import com.atoudeft.banque.serveur.ServeurBanque;
+import com.atoudeft.commun.evenement.Evenement;
+import com.atoudeft.commun.evenement.GestionnaireEvenement;
+import com.atoudeft.commun.net.Connexion;
+
 
 public class OperationRetrait extends Operation {
     private double montant;
@@ -14,8 +21,9 @@ public class OperationRetrait extends Operation {
 
     @Override
     public String toString() {
-        return getDate() + " " + getType() + " " + montant;
+        return String.format("%s %s %.2f", getDate(), getType(), getMontant());
     }
+
 
     @Override
     public void afficherDetails() {

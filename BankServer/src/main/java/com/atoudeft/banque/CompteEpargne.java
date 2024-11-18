@@ -28,6 +28,8 @@ public boolean crediter(double montant) {
         double nouvSolde = this.getSolde();
         nouvSolde += montant;
         this.setSolde(nouvSolde);
+        OperationDepot operation = new OperationDepot(montant);
+        enregistrerOperation(operation);
         return true;
     }
     return false;
@@ -45,6 +47,8 @@ public boolean crediter(double montant) {
                 }
             }
             this.setSolde(soldeApresRetrait);
+            OperationRetrait operation = new OperationRetrait(montant);
+            enregistrerOperation(operation);
             return true;
         }
         return false;
@@ -62,6 +66,8 @@ public boolean crediter(double montant) {
                 soldeApresPaiement = soldeApresFrais;
             }
             this.setSolde(soldeApresPaiement);
+            OperationFacture operation = new OperationFacture(montant, numeroFacture, description);
+            enregistrerOperation(operation);
             return true;
         }
         return false;
@@ -80,6 +86,8 @@ public boolean crediter(double montant) {
 
                 this.setSolde(nouveauSolde);
                 compteDestinataire.crediter(montant);
+                OperationTransferer operation = new OperationTransferer(montant, compteDestinataire);
+                enregistrerOperation(operation);
                 return true;
             }
             return false;
