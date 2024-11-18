@@ -2,9 +2,8 @@ package com.atoudeft.banque;
 
 import java.io.Serializable;
 
-// Classe Noeud - représente un noeud dans une pile chaînée
+// Classe Noeud - represente un noeud dans une pile chainee
 class Noeud<T> implements Serializable {
-    private static final long serialVersionUID = 1L;
     private T valeur;
     private Noeud<T> suivant;
 
@@ -23,5 +22,10 @@ class Noeud<T> implements Serializable {
 
     public Noeud<T> getSuivant() {
         return suivant;
+    }
+
+    @Override
+    public String toString() {
+        return valeur.toString();
     }
 }

@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 // Classe PileChainee - représente une pile chaînée simple
 public class PileChainee<T> implements Serializable {
-    private static final long serialVersionUID = 1L;
     private Noeud<T> sommet;
 
     public PileChainee() {
@@ -45,13 +44,11 @@ public class PileChainee<T> implements Serializable {
         StringBuilder chaineListe = new StringBuilder();
 
         Noeud courant = sommet;
-        int position = 0;
         while (courant.getSuivant() != null) {
-            chaineListe.append(position + " : " + courant.toString() + "\n");
+            chaineListe.append(courant.toString() + "\n");
             courant = courant.getSuivant();
-            position++;
         }
-        chaineListe.append(position + " : " + courant.toString() + "\n");
+        chaineListe.append(courant.toString() + "\n");
 
         return chaineListe.toString();
     }

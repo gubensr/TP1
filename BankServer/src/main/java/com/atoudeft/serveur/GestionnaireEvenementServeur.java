@@ -261,7 +261,11 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                             cnx.envoyer("HIST NO compte non trouvé");
                         } else {
                             PileChainee<Operation> historique = compte.getHistorique();
-                            cnx.envoyer(String.valueOf(historique.depiler()));
+                            StringBuilder sb = new StringBuilder("HIST\n");
+                            for (String operation : historique.toString().split("\n")) {
+                                sb.append(operation).append("\n");
+                            }
+                            cnx.envoyer(sb.toString());
                         }
                     }
                     break;

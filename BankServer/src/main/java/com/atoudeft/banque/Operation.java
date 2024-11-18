@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 public abstract class Operation implements Serializable {
-    private static final long serialVersionUID = 1L;
     private TypeOperation type;
     private Date date;
     private double montant;
@@ -31,7 +30,7 @@ public abstract class Operation implements Serializable {
         return String.format("%s %s %.2f", date, type, montant);
     }
 
-    // Méthodes abstraites que les sous-classes devront implémenter
+    // Méthodes abstraites que les sous-classes devront implementer
     public abstract void afficherDetails();
 }
 
