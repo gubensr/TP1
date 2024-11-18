@@ -121,18 +121,8 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                         cnx.envoyer("EPARGNE NO deja possede");
                     } else {
                         String numeroCompteEpargne;
-                        boolean estUtilise;
                         banque = serveurBanque.getBanque();
-                        do {
-                            numeroCompteEpargne = CompteBancaire.genereNouveauNumero();
-                            estUtilise = false;
-                            for (CompteBancaire c : banque.getComptes()) {
-                                if (Objects.equals(c.getNumero(), numeroCompteEpargne)) {
-                                    estUtilise = true;
-                                    break;
-                                }
-                            }
-                        } while (estUtilise);
+                        numeroCompteEpargne = banque.genererNumeroCompteUnique();
 
                         CompteEpargne compteEpargne = new CompteEpargne(numeroCompteEpargne, TypeCompte.EPARGNE, 5.0);
                         serveurBanque.getBanque().getCompteClient(cnx.getNumeroCompteClient()).ajouter( compteEpargne);
@@ -145,17 +135,16 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                     if (cnx.getNumeroCompteClient() != null) {
                         argument = evenement.getArgument();
                         if (argument.equalsIgnoreCase("EPARGNE")){
-                            cnx = (ConnexionBanque) source;
                             cnx.setNumeroCompteActuel(banque.getCompteClient(cnx.getNumeroCompteClient()).getComptes().get(1).getNumero());
-                            System.out.println(cnx.getNumeroCompteActuel());
+                            cnx.envoyer("SELECT OK");
                             break;
                         } else if (argument.equalsIgnoreCase("CHEQUE")){
-                            cnx = (ConnexionBanque) source;
                             cnx.setNumeroCompteActuel(banque.getNumeroCompteParDefaut(cnx.getNumeroCompteClient()));
+                            cnx.envoyer("SELECT OK");
                             System.out.println(cnx.getNumeroCompteActuel());
                             break;
                         } else {
-                            cnx.envoyer("ERREUR ");
+                            cnx.envoyer("SELECT NO");
                         }
                     } else {
                         cnx.envoyer("SELECT pas connecte");

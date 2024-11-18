@@ -49,6 +49,10 @@ public class CompteClient implements Serializable {
     public boolean verifierNIP(String nipEntree){
         return nipEntree.equals(this.nip);
     }
+    public String getNumero() {
+        return numero;
+    }
+
 
     @Override
     public boolean equals(Object o) {

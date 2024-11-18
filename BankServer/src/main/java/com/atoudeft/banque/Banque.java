@@ -1,5 +1,6 @@
 package com.atoudeft.banque;
 
+import org.jetbrains.annotations.NotNull;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.Serializable;
@@ -121,22 +122,34 @@ public class Banque implements Serializable {
 
         CompteClient newCompteClient= new CompteClient(numCompteClient,nip);
 
-        String numCompteCheque;
-        boolean estUtilise;
-        do {
-            numCompteCheque = CompteBancaire.genereNouveauNumero();
-            estUtilise = false;
-            for (CompteBancaire c : newCompteClient.getComptes()) {
-                if (Objects.equals(c.getNumero(), numCompteCheque)) {
-                    estUtilise = true;
-                    break;
-                }
-            }
-        } while (estUtilise);
+        String numCompteCheque = genererNumeroCompteUnique();
 
         newCompteClient.ajouter(new CompteCheque(numCompteCheque,TypeCompte.CHEQUE));
 
         return this.comptes.add(newCompteClient);
+    }
+
+    public @NotNull String genererNumeroCompteUnique() {
+        String numCompte;
+        boolean estUtilise;
+        do {
+            numCompte = CompteBancaire.genereNouveauNumero();
+            estUtilise = false;
+            //verifie les numero des compte cheque-epargne et des comptes client
+            for (CompteClient c : comptes){
+                if (c.getNumero().equals(numCompte)) {
+                    estUtilise = true;
+                    break;
+                }
+                for (CompteBancaire cb : c.getComptes()){
+                    if (Objects.equals(cb.getNumero(), numCompte)){
+                        estUtilise = true;
+                        break;
+                    }
+                }
+            }
+        } while (estUtilise);
+        return numCompte;
     }
 
     /**
